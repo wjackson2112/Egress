@@ -2,6 +2,7 @@
 
 GameManager::GameManager() : eventManager{EventManager(0)}, quit{false}
 {
+	gameLayer = Layer();
 	eventManager.registerSDLEventHandler(this);
 }
 
@@ -21,6 +22,16 @@ void GameManager::handleSDLEvent(SDL_Event event)
 	{
 		quit = true;
 	}
+}
+
+void GameManager::update(int frameTime)
+{
+	gameLayer.update(frameTime);
+}
+
+void GameManager::render()
+{
+	gameLayer.render(NULL);
 }
 
 bool GameManager::shouldQuit()
