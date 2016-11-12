@@ -7,9 +7,8 @@
 int main( int argc, char* args[] )
 {
 	long elapsedTime;
-
 	WindowManager& window = WindowManager::Instance();
-	GameManager game = GameManager();
+	GameManager* game;
 	FrameRateLimiter limiter = FrameRateLimiter(MAX_FRAME_RATE);
 
 	//Init
@@ -17,25 +16,29 @@ int main( int argc, char* args[] )
 	window.setName("Egress");
 	window.open();
 
+	game = new GameManager();
+
 	//Check Quit
-	while(!game.shouldQuit())
+	while(!game->shouldQuit())
 	{
-		//Handle Events
-		game.handleEvents();
-
-		//Update
-		game.update(elapsedTime);
-
 		//Render
 		window.clear();
-		game.render();
+		game->render();
 		window.present();
+
+		//Handle Events
+		game->handleEvents();
+
+		//Update
+		game->update(elapsedTime);
+		game->resolveCollisions();
 
 		//Limit Frame Rate
 		elapsedTime = limiter.wait();
 	}
 
 	//Cleanup
+	delete game;
 	window.close();
 
 	return 0;
